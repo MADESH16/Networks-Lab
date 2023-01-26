@@ -1,19 +1,27 @@
-import socket
+import socket,time
+Host = 'localhost'
+Port = 1234
+try:
+    s= socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+except socket.error as err:
+    print("Socket Creation Error %s"%(err))
+s.connect((Host, Port))
+print("Succesfully connected with server")
+print("Enter exit to EXIT")
 
-s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.connect(('localhost',1234))
-a=input("ARP or RARP:")
-if(a=="ARP"):
-    add=input("Enter ip")
-elif(a=="RARP"):
-    add = input("Enter MAC")
-s.send(add.encode())
-mac=s.recv(1024)
-mac=mac.decode("utf-8")
-if(a=="ARP"):
-    print('MAC of ', add ,'is:', mac)
-else:
-    print('IP of',add,'is : ',mac)
+while(True):
+    add = input('Enter IP :')
+    if add =='exit':
+        s.send(add.encode())
+        time.sleep(2)
+        print("Exiting")
+        break
+    s.send(add.encode())
+    mac = s.recv( 1024)
+    mac = mac.decode("utf-8")
+    print('MAC of',add,' is : ',mac)
+s.shutdown(2)
+s.close()
 
 
 
